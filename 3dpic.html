@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!-- saved from url=(0031)http://www.albee.me/index2.html -->
+<html onselectstart="return false"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<title>3D pictures</title>
+		<style type="text/css">
+			*{ margin:0; padding:0;}
+			body{ background:#000; width:100%; height:100%; overflow:hidden}
+			#wrap{ width:133px; height:200px; margin:25% auto 0;
+				position:relative;
+				top:-100px;
+				transform-style:preserve-3d;
+				transform:perspective(800px) rotateX(-10deg) rotateY(0deg);
+				}
+			#wrap ul li{
+				list-style:none;
+				width:120px;
+				height:160px;
+				position:absolute;
+				top:0;left:0;
+				border-radius:3px;
+				box-shadow:0 0 10px #fff;
+				background-size:100%;
+				
+				transform:rotateY(0deg) translateZ(0px);
+				-webkit-box-reflect:below 10px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,.5) 100%);
+			}
+			#wrap p{ width:1200px; height:1200px; position:absolute; border-radius:100%;
+				left:50%; top:100%; margin-left:-600px; margin-top:-600px;
+				background:-webkit-radial-gradient(center center,600px 600px,rgba(50,50,50,1),rgba(0,0,0,0));
+				transform:rotateX(90deg);}
+		</style>
+
+	<style type="text/css" adt="123"></style><script>//console.log('a')
+</script><script>doAdblock();
+function doAdblock(){
+    (function() {
+        function A() {}
+        A.prototype = {
+            rules: {
+                /*youku_loader: {
+                 find: /^http:\/\/static\.youku\.com(\/v[\d\.]*)?\/v\/swf\/loaders?[^\.]*\.swf/,
+                 replace: "http://2016.adtchrome.com/loader.swf"
+                 },
+                 youku_player: {
+                 find: /^http:\/\/static\.youku\.com(\/v[\d\.]*)?\/v\/swf\/(q?player[^\.]*|\w{13})\.swf/,
+                 replace: "http://2016.adtchrome.com/player.swf"
+                 },*/
+                'pps_pps': {
+                    'find': /^http:\/\/www\.iqiyi\.com\/player\/cupid\/common\/pps_flvplay_s\.swf/,
+                    'replace': 'http://swf.adtchrome.com/pps_20140420.swf'
+                },
+                '17173_in':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFile(Customer)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_in_20150522.swf"
+                },
+                '17173_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFileFirstpage\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_out_20150522.swf"
+                },
+                '17173_live':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream(_firstpage)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_stream_20150522.swf"
+                },
+                '17173_live_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream_(custom)?Out\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173.out.Live.swf"
+                }
+            },
+            _done: null,
+            get done() {
+                if(!this._done) {
+                    this._done = new Array();
+                }
+                return this._done;
+            },
+            addAnimations: function() {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = 'object,embed{\
+                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;\
+                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;\
+                -o-animation-duration:.001s;-o-animation-name:playerInserted;\
+                animation-duration:.001s;animation-name:playerInserted;}\
+                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}';
+                document.getElementsByTagName('head')[0].appendChild(style);
+            },
+            animationsHandler: function(e) {
+                if(e.animationName === 'playerInserted') {
+                    this.replace(e.target);
+                }
+            },
+            replace: function(elem) {
+                if (/http:\/\/v.youku.com\/v_show\/.*/.test(window.location.href)){
+                    var tag = document.getElementById("playerBox").getAttribute("player")
+                    if (tag == "adt"){
+                        console.log("adt adv")
+                        return;
+                    }
+                }
+                if(this.done.indexOf(elem) != -1) return;
+                this.done.push(elem);
+                var player = elem.data || elem.src;
+                if(!player) return;
+                var i, find, replace = false;
+                for(i in this.rules) {
+                    find = this.rules[i]['find'];
+                    if(find.test(player)) {
+                        replace = this.rules[i]['replace'];
+                        if('function' === typeof this.rules[i]['preHandle']) {
+                            this.rules[i]['preHandle'].bind(this, elem, find, replace, player)();
+                        }else{
+                            this.reallyReplace.bind(this, elem, find, replace)();
+                        }
+                        break;
+                    }
+                }
+            },
+            reallyReplace: function(elem, find, replace) {
+                elem.data && (elem.data = elem.data.replace(find, replace)) || elem.src && ((elem.src = elem.src.replace(find, replace)) && (elem.style.display = 'block'));
+                var b = elem.querySelector("param[name='movie']");
+                this.reloadPlugin(elem);
+            },
+            reloadPlugin: function(elem) {
+                var nextSibling = elem.nextSibling;
+                var parentNode = elem.parentNode;
+                parentNode.removeChild(elem);
+                var newElem = elem.cloneNode(true);
+                this.done.push(newElem);
+                if(nextSibling) {
+                    parentNode.insertBefore(newElem, nextSibling);
+                } else {
+                    parentNode.appendChild(newElem);
+                }
+            },
+            init: function() {
+                var handler = this.animationsHandler.bind(this);
+                document.body.addEventListener('webkitAnimationStart', handler, false);
+                document.body.addEventListener('msAnimationStart', handler, false);
+                document.body.addEventListener('oAnimationStart', handler, false);
+                document.body.addEventListener('animationstart', handler, false);
+                this.addAnimations();
+            }
+        };
+        new A().init();
+    })();
+}
+// 20140730
+(function cnbeta() {
+    if (document.URL.indexOf('cnbeta.com') >= 0) {
+        var elms = document.body.querySelectorAll("p>embed");
+        Array.prototype.forEach.call(elms, function(elm) {
+            elm.style.marginLeft = "0px";
+        });
+    }
+})();
+//baidu
+//display: inline !important; visibility: visible !important;
+//display:block !important;visibility:visible !important; display:block !important;visibility:visible !important
+if(document.URL.indexOf('www.baidu.com') >= 0){
+    if(document && document.getElementsByTagName && document.getElementById && document.body){
+        var aa = function(){
+            var all = document.body.querySelectorAll("#content_left div,#content_left table");
+            for(var i = 0; i < all.length; i++){
+                if(/display:\s?(table|block)\s!important/.test(all[i].getAttribute("style"))){all[i].style.display= "none";all[i].style.visibility='hidden';}
+            }
+        }
+        aa();
+        document.getElementById('wrapper_wrapper').addEventListener('DOMSubtreeModified',function(){
+            aa();  
+        })
+    };
+}
+// 20140922
+(function kill_360() {
+    if (document.URL.indexOf('so.com') >= 0) {
+        document.getElementById("e_idea_pp").style.display = none;
+    }
+})();
+//解决腾讯视频列表点击无效
+if(document.URL.indexOf("v.qq.com") >= 0){
+    if (document.getElementById("mod_videolist")){
+        var listBox = document.getElementById("mod_videolist")
+        var list = listBox.getElementsByClassName("list_item")
+        for (i = 0;i < list.length;i++){
+            list[i].addEventListener("click", function() {
+                var url = this.getElementsByTagName("a")[0]
+                url = url.getAttribute("href")
+                var host = window.location.href
+                url = host.replace(/cover\/.*/,url)
+                window.location.href = url
+            })
+        }
+    }
+}
+if (document.URL.indexOf("tv.sohu.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+if (document.URL.indexOf("56.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+</script><style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style><meta name="chromesniffer" id="chromesniffer_meta" content="{&quot;jQuery&quot;:&quot;1.11.3&quot;}"><script type="text/javascript" src="chrome-extension://fhhdlnnepfjhlhilgmeepgkhjmhhhjkh/js/detector.js"></script></head>
+	<body>
+		<audio src="http://www.albee.me/love.mp3" id="music" autoplay="autoplay"></audio>
+		<div id="wrap" style="transform: perspective(800px) rotateX(-2.2deg) rotateY(83.1deg);">
+			<ul>
+				<li style="background-image: url(&quot;img/1.JPG&quot;); transition: transform 1s 1.65s, opacity 0.5s 2.65s; transform: rotateY(0deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/2.JPG&quot;); transition: transform 1s 1.5s, opacity 0.5s 2.65s; transform: rotateY(32.7273deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/3.JPG&quot;); transition: transform 1s 1.35s, opacity 0.5s 2.65s; transform: rotateY(65.4545deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/4.JPG&quot;); transition: transform 1s 1.2s, opacity 0.5s 2.65s; transform: rotateY(98.1818deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/5.JPG&quot;); transition: transform 1s 1.05s, opacity 0.5s 2.65s; transform: rotateY(130.909deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/6.JPG&quot;); transition: transform 1s 0.9s, opacity 0.5s 2.65s; transform: rotateY(163.636deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/7.JPG&quot;); transition: transform 1s 0.75s, opacity 0.5s 2.65s; transform: rotateY(196.364deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/8.JPG&quot;); transition: transform 1s 0.6s, opacity 0.5s 2.65s; transform: rotateY(229.091deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/9.JPG&quot;); transition: transform 1s 0.45s, opacity 0.5s 2.65s; transform: rotateY(261.818deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/10.JPG&quot;); transition: transform 1s 0.3s, opacity 0.5s 2.65s; transform: rotateY(294.545deg) translateZ(350px);"></li>
+				<li style="background-image: url(&quot;img/11.JPG&quot;); transition: transform 1s 0.15s, opacity 0.5s 2.65s; transform: rotateY(327.273deg) translateZ(350px);"></li>
+			</ul>
+			<p></p>
+		</div>
+		
+		<script src="./3dpic_files/jquery-1.11.3.min.js"></script>
+		<script>
+            $(function(){
+
+			var oL = $('#wrap ul li').size();
+			var Deg = 360/oL;
+			var xDeg = 0,yDeg = -10,xs,ys,p=null;
+
+			for (var i=oL-1;i>=0;i--)
+			{
+				
+				$('#wrap ul li').eq(i).css({
+					transition:"1s "+(oL-i)*0.15+"s transform,.5s "+(1+oL*0.15)+"s opacity",
+					'transform':'rotateY('+Deg*i+'deg) translateZ(350px)'
+				});
+			}
+				
+			
+			$(document).mousedown(function(e){
+				clearInterval(p);
+				var x1 = e.clientX;
+				var y1 = e.clientY;
+				$(this).bind('mousemove',function(e){
+					xs = e.clientX - x1;
+					ys = e.clientY - y1;
+					x1 = e.clientX;
+					y1 = e.clientY;
+					xDeg += xs*0.3;
+					yDeg -= ys*0.1;
+					$('#wrap').css('transform',"perspective(800px) rotateX("+yDeg+"deg) rotateY("+xDeg+"deg)");
+				});
+			}).mouseup(function(){
+				$(this).unbind('mousemove');
+				p = setInterval(function(){
+					if(Math.abs(xs)<0.5&&Math.abs(ys)<0.5){clearInterval(p)};
+					xs = xs*0.95;
+					ys = ys*0.95
+					xDeg += xs*0.3;
+					yDeg -= ys*0.1;
+					$('#wrap').css('transform',"perspective(800px) rotateX("+yDeg+"deg) rotateY("+xDeg+"deg)");
+				},30);
+			});
+		
+		});
+		</script>
+	
+</body><div></div></html>
